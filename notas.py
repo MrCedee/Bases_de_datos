@@ -1,9 +1,10 @@
+from MySQLdb import TimestampFromTicks
 import mysql.connector
 import os
+from datetime import datetime
 
 os.system("cls")
 mydb = mysql.connector.connect(
-    # Configura la conexión
     host="localhost",
     user="root",
     passwd=""
@@ -14,7 +15,6 @@ def initDB():
     cursor = mydb.cursor()
     cursor.execute('CREATE SCHEMA IF NOT EXISTS python')
     cursor.execute('USE python')
-    # Crea las tablas correspondientes al diagrama notas.png
     tabla_user = """
     CREATE TABLE IF NOT EXISTS  usuarios (
         username VARCHAR(50) UNIQUE NOT NULL,
@@ -69,18 +69,33 @@ def crearUsuario():
     password =  input('Contraseña (¡visible!) : ')
 
     # Añadir el usuario a la BD
+    add_user = """ INSERT INTO python.usuarios
+                    VALUES (%s, %s)"""
+    cursor.execute(add_user, (username, password))
+    mydb.commit()
+    os.system("cls")
 
     print('------ Usuario añadido ------\n')
 
 def login():
+    cursor = mydb.cursor()
     username = input("Login: ")
     password = input("Password (¡visible!): ")
 
     # Comprobar que las credenciales son válidas
-    credencialesValidas = ...
+    credencialesValidas = """SELECT EXISTS(SELECT * 
+                                            FROM python.usuarios 
+                                            WHERE username = %s and 
+                                                password = %s)"""
+
+    
+    cursor.execute(credencialesValidas,(username,password))
+    for (condition) in cursor:
+        condition = condition[0]
 
     # Si las credenciales son válidas, accedemos al meno principal
-    if credencialesValidas:
+    if condition:
+        os.system("cls")
         opcion = 0
         while opcion != 5:
             muestraOperaciones(username)
@@ -95,14 +110,28 @@ def login():
                 borrarNota(username)
 
 def crearNota(username):
+    cursor = mydb.cursor()
     titulo = input("Titulo: ")
     texto = input("Cuerpo: ")
-
-    # Guardar nota en la BD
+    tiempo = datetime.today()
+    
+    crear_nota = """INSERT INTO python.notas 
+                    (titulo, creada, cuerpo, autor) 
+                        VALUES (%s, %s, %s, %s)"""
+    cursor.execute(crear_nota, (titulo, tiempo, texto, username))
+    mydb.commit()
 
 def listarNotas(username):
+    cursor = mydb.cursor()
+    consulta = """SELECT titulo, cuerpo
+                    From python.notas
+                    WHERE autor = %s 
+                    ORDER BY creada DESC"""
+    cursor.execute(consulta,[username])
+    for (titulo, texto) in cursor:
+        print("Título: "+ str(titulo)+ ".")
+        print("Cuerpo: "+ str(texto))
     # Mostrar por pantalla las notas del usuario, ordenadas por fecha de creación decreciente
-    pass
 
 def filtrarNotas(username):
     # Mostrar por pantalla las notas del usuario creadas entre dos fechas pedidas por pantalla
