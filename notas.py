@@ -123,13 +123,13 @@ def crearNota(username):
 
 def listarNotas(username):
     cursor = mydb.cursor()
-    consulta = """SELECT titulo, cuerpo
+    consulta = """SELECT id, titulo, cuerpo
                     From python.notas
                     WHERE autor = %s 
                     ORDER BY creada DESC"""
     cursor.execute(consulta,[username])
-    for (titulo, texto) in cursor:
-        print("Título: "+ str(titulo)+ ".")
+    for (id,titulo, texto) in cursor:
+        print("ID: " + str(id) + "   " + "Título: "+ str(titulo)+ ".")
         print("Cuerpo: "+ str(texto))
     # Mostrar por pantalla las notas del usuario, ordenadas por fecha de creación decreciente
 
