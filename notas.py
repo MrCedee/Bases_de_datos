@@ -1,9 +1,11 @@
 import mysql.connector
+import os
 
+os.system("cls")
 mydb = mysql.connector.connect(
     # Configura la conexión
     host="localhost",
-    user="",
+    user="root",
     passwd=""
 )
 
@@ -13,6 +15,32 @@ def initDB():
     cursor.execute('CREATE SCHEMA IF NOT EXISTS python')
     cursor.execute('USE python')
     # Crea las tablas correspondientes al diagrama notas.png
+    tabla_user = """
+    CREATE TABLE IF NOT EXISTS  usuarios (
+        username VARCHAR(50) UNIQUE NOT NULL,
+        password VARCHAR(50),
+        PRIMARY KEY (username)
+    );
+    """
+    tabla_notas = """
+    CREATE  TABLE IF NOT EXISTS notas (
+        id INT AUTO_INCREMENT,
+        titulo VARCHAR(250) NOT NULL,
+        creada TIMESTAMP NOT NULL,
+        cuerpo VARCHAR(1000),
+        autor VARCHAR(50) NOT NULL,
+        PRIMARY KEY (id),
+        CONSTRAINT
+            FOREIGN KEY (autor)
+            REFERENCES usuarios (username)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+    );
+    """
+
+    cursor.execute(tabla_user)
+    cursor.execute(tabla_notas)
+
 
 
 def muestraMenu():
