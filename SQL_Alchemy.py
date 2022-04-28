@@ -1,25 +1,25 @@
-# Para instalar las librerías:
-# pip install sqlalchemy pymysql
-#
-# Asegúrate de tener ejecutándose una instancia de MySQL con una base de datos llamada alchemy:
-# docker run --name mysql -e MYSQL_ROOT_PASSWORD=sqlalchemy -e MYSQL_DATABASE=alchemy -p 3306:3306 -d mysql:5.7
-
-# Configurando la conexión con el SGBD
 from sqlalchemy import create_engine
-
-engine = create_engine(
-    "mysql+pymysql://root:sqlalchemy@127.0.0.1:3306/alchemy",
-)
-
-# Definiendo los modelos
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
-
 from sqlalchemy import Column, Table, ForeignKey
 from sqlalchemy.types import Integer, String, DateTime
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+
+# Asegúrate de tener ejecutándose una instancia de MySQL con una base de datos llamada alchemy:
+# docker run --name mysql -e MYSQL_ROOT_PASSWORD=sqlalchemy -e MYSQL_DATABASE=alchemy -p 3306:3306 -d mysql:5.7
+
+
+# Configurando la conexión con el SGBD
+
+engine = create_engine(
+    "mysql+pymysql://root:sqlalchemy@127.0.0.1:3306/alchemy",
+    echo=True
+)
+
+# Definiendo los modelos
+
+Base = declarative_base()
 
 # Definimos la tabla de asociación para la relación N:M
 
@@ -70,7 +70,7 @@ class Capitulo(Base):
 Base.metadata.create_all(engine)
 
 # Abrimos una sesión de conexión con el SGBD
-from sqlalchemy.orm import sessionmaker
+
 Session = sessionmaker(bind=engine)
 session = Session()
 
