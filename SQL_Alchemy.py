@@ -13,8 +13,7 @@ from sqlalchemy.ext.declarative import declarative_base
 # Configurando la conexión con el SGBD
 
 engine = create_engine(
-    "mysql+pymysql://root:sqlalchemy@127.0.0.1:3306/alchemy",
-    echo=True
+    "mysql+pymysql://root:sqlalchemy@127.0.0.1:3306/alchemy"
 )
 
 # Definiendo los modelos
@@ -23,11 +22,11 @@ Base = declarative_base()
 
 # Definimos la tabla de asociación para la relación N:M
 
+
 tabla_asoc = Table('visualiza', Base.metadata,
    Column('id_usuario', ForeignKey('usuarios.id'), primary_key=True),
    Column('id_capitulo', ForeignKey('capitulos.id'), primary_key=True)
 )
-
 class Usuario(Base):
    # Nombre de la tabla que se creará en la BD
    __tablename__ = "usuarios"
@@ -65,6 +64,7 @@ class Capitulo(Base):
 
    def __repr__(self):
       return f"<Capítulo '{self.titulo}' ({self.serie})>"
+   
 
 # Se lanza la generación de todas las tablas
 Base.metadata.create_all(engine)
