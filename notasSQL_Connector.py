@@ -59,6 +59,11 @@ def muestraOperaciones(usuario):
     print('  5. Logout')
     print('--------------------')
 
+def pedir_fechas():
+    print(f'------- FECHAS -------')
+    print('  Inserte dos fechas entre las que quiere obtener notas')
+    print('-----------------------')
+
 
 def crearUsuario():
 
@@ -134,10 +139,34 @@ def listarNotas(username):
     # Mostrar por pantalla las notas del usuario, ordenadas por fecha de creación decreciente
 
 def filtrarNotas(username):
+    cursor = mydb.cursor()
+    os.system("cls")
+    pedir_fechas()
+    f1 = input("Fecha Inicial: ")
+    f2 = input("Fecha Final: ")
+    f1 =  datetime. strptime(f1, '%d/%m/%y')
+    f2 =  datetime. strptime(f2, '%d/%m/%y')
+    consulta = """SELECT id, titulo, cuerpo
+                    From python.notas
+                    WHERE autor = %s AND creada BETWEEN %s AND %S
+                    ORDER BY creada DESC"""
+    cursor.execute(consulta, (username, f1, f2))
+    for (id,titulo, texto) in cursor:
+        print("ID: " + str(id) + "   " + "Título: "+ str(titulo)+ ".")
+        print("Cuerpo: "+ str(texto))
     # Mostrar por pantalla las notas del usuario creadas entre dos fechas pedidas por pantalla
     pass
 
 def borrarNota(username):
+    os.system("cls")
+    id = int(input("Inserte el id de la nota a eliminar: "))
+    cursor = mydb.cursor()
+    consulta = """DELETE
+                    From python.notas
+                    WHERE autor = %s and id = %s 
+                    ORDER BY creada DESC"""
+    cursor.execute(consulta, (username, id))
+    mydb.commit()
     # Pide el id de la nota que se quiere borrar y se elimina la fila correspondiente, siempre que la nota sea del usuario <username>
     pass
 
