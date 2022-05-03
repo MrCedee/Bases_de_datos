@@ -1,18 +1,19 @@
 from sqlite3 import Timestamp
 from MySQLdb import TimestampFromTicks
-from sqlalchemy import create_engine
-from sqlalchemy import Column, Table, ForeignKey
-from sqlalchemy.types import Integer, String, DateTime
+from sqlalchemy import BigInteger, create_engine
+from sqlalchemy import Column, ForeignKey
+from sqlalchemy.types import Integer, String
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import os
 from datetime import datetime
+import time
 
 os.system("cls")
 engine = create_engine(
-    "mysql+pymysql://root:sqlalchemy@127.0.0.1:3306/alchemy"
+    "mysql+pymysql://root:@127.0.0.1:3306/alchemy"
 )
 
 Base = declarative_base()
@@ -31,13 +32,13 @@ def initDB():
             return f"<Usuario: {self.username}>"
 
     class Notas(Base):
-        __tablename__ = "series"
+        __tablename__ = "notas"
 
         id = Column(Integer, primary_key=True, autoincrement="auto")
         titulo = Column(String(250), nullable=False)
         cuerpo = Column(String(1000), nullable=False)
         autor = Column(String(50), ForeignKey("usuarios.username"))
-        fecha_alta = Column(Timestamp, server_default=func.now())
+        creada = Column(BigInteger, nullable=False)
 
         usuario = relationship("Usuarios", backref="notas")
 
@@ -56,13 +57,15 @@ def initDB():
 
 
 def muestraMenu():
+    os.system("cls")
     print('------- MENU -------')
     print('  1. Crear usuario')
     print('  2. Login')
     print('  3. Salir')
     print('--------------------')
-
+    
 def muestraOperaciones(usuario):
+    os.system("cls")
     print(f'------- OPERACIONES ({usuario}) -------')
     print('  1. Crear nota')
     print('  2. Listar mis notas')
@@ -91,20 +94,21 @@ def crearUsuario():
     os.system("cls")
 
     print('------ Usuario añadido ------\n')
+    time.sleep(5)
 
 def login():
     username_ = input("Login: ")
     password_ = input("Password (¡visible!): ")
 
     # Comprobar que las credenciales son válidas
-    credenciales = session.query(Usuario)
-    credenciales.filter_by(username=username_)
-    credenciales.filter_by(password=password_)
-    credenciales.all()
+    credenciales = session.query(Usuarios)
+    credenciales = credenciales.filter_by(username=username_)
+    credenciales = credenciales.filter_by(password=password_)
+    credenciales = credenciales.all()
     condition = True
 
     
-    if credenciales[0] == None:
+    if credenciales == []:
         condition = False
 
     # Si las credenciales son válidas, accedemos al meno principal
@@ -126,7 +130,7 @@ def login():
 def crearNota(username_):
     titulo_ = input("Titulo: ")
     texto = input("Cuerpo: ")
-    tiempo = datetime.today()
+    tiempo = datetime.timestamp(datetime.now())
     
     c = Notas(titulo=titulo_, cuerpo=texto, autor=username_, creada=tiempo)
     session.add(c)
@@ -134,12 +138,13 @@ def crearNota(username_):
 
 def listarNotas(username_):
     u2 = session.query(Usuarios)
-    u2.filter_by(username=username_)
-    u2.all()
+    u2 = u2.filter_by(username=username_)
+    u2 = u2.all()
     u2 = u2[0]
     for i in u2.notas:
         print("ID: " + str(i.id) + "   " + "Título: "+ str(i.titulo)+ ".")
         print("Cuerpo: "+ str(i.cuerpo))
+    input("Presione cualquier tecla para salir: ")
     # Mostrar por pantalla las notas del usuario, ordenadas por fecha de creación decreciente
 
 def filtrarNotas(username_):
@@ -147,28 +152,30 @@ def filtrarNotas(username_):
     pedir_fechas()
     f1 = input("Fecha Inicial: ")
     f2 = input("Fecha Final: ")
-    f1 =  datetime. strptime(f1, '%d/%m/%y')
-    f2 =  datetime. strptime(f2, '%d/%m/%y')
-    u2 = session.query(Notas)
-    u2.filter_by(autor=username_)
-    u2.filter(Notas.creada <= f2)
-    u2.filter(Notas.creada >= f1)
-    u2.all()
-    for i in u2:
+    f1 =  datetime.timestamp(datetime. strptime(f1, '%d/%m/%Y'))
+    f2 =  datetime.timestamp(datetime. strptime(f2, '%d/%m/%Y'))
+    n2 = session.query(Notas)
+    n2 = n2.filter_by(autor=username_)
+    n2 = n2.filter(Notas.creada <= f2)
+    n2 = n2.filter(Notas.creada >= f1)
+    n2 = n2.all()
+    for i in n2:
         print("ID: " + str(i.id) + "   " + "Título: "+ str(i.titulo)+ ".")
         print("Cuerpo: "+ str(i.cuerpo))
+    input("Presione cualquier tecla para salir: ")
     # Mostrar por pantalla las notas del usuario creadas entre dos fechas pedidas por pantalla
-    pass
 
 def borrarNota(username_):
     os.system("cls")
     id_ = int(input("Inserte el id de la nota a eliminar: "))
-    u2 = session.query(Usuarios)
-    u2.filter_by(username=username_)
-    u2.delete(id=id_)
+    n1 = session.query(Notas)
+    n1 = n1.filter_by(autor=username_)
+    n1 = n1.filter_by(id=id_)
+    n1 = n1.all()
+    n1 = n1[0]
+    session.delete(n1)
     session.commit()
     # Pide el id de la nota que se quiere borrar y se elimina la fila correspondiente, siempre que la nota sea del usuario <username>
-    pass
 
 def run():
     n = 0

@@ -170,7 +170,6 @@ def borrarNota(username):
     cursor.execute(consulta, (username, id))
     mydb.commit()
     # Pide el id de la nota que se quiere borrar y se elimina la fila correspondiente, siempre que la nota sea del usuario <username>
-    pass
 
 def run():
     n = 0
