@@ -1,7 +1,8 @@
 from MySQLdb import TimestampFromTicks
 import mysql.connector
 import os
-from datetime import datetime, timedelta 
+from datetime import datetime
+import time
 
 os.system("cls")
 mydb = mysql.connector.connect(
@@ -83,6 +84,7 @@ def crearUsuario():
     os.system("cls")
 
     print('------ Usuario añadido ------\n')
+    time.sleep(5)
 
 def login():
     cursor = mydb.cursor()
@@ -183,6 +185,8 @@ def run():
             login()
         elif n == 3:
             print('----- ¡Hasta pronto! -----')
+            time.sleep(5)
+            os.system("cls")
 
 
 if __name__ == '__main__':

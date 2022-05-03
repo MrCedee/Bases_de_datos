@@ -188,6 +188,8 @@ def run():
             login()
         elif n == 3:
             print('----- ¡Hasta pronto! -----')
+            time.sleep(5)
+            os.system("cls")
 
 
 if __name__ == '__main__':
