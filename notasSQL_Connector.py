@@ -1,7 +1,7 @@
 from MySQLdb import TimestampFromTicks
 import mysql.connector
 import os
-from datetime import datetime
+from datetime import datetime, timedelta 
 
 os.system("cls")
 mydb = mysql.connector.connect(
@@ -26,7 +26,7 @@ def initDB():
     CREATE  TABLE IF NOT EXISTS notas (
         id INT AUTO_INCREMENT,
         titulo VARCHAR(250) NOT NULL,
-        creada TIMESTAMP NOT NULL,
+        creada BIGINT NOT NULL,
         cuerpo VARCHAR(1000),
         autor VARCHAR(50) NOT NULL,
         PRIMARY KEY (id),
@@ -51,6 +51,7 @@ def muestraMenu():
     print('--------------------')
 
 def muestraOperaciones(usuario):
+    os.system("cls")
     print(f'------- OPERACIONES ({usuario}) -------')
     print('  1. Crear nota')
     print('  2. Listar mis notas')
@@ -118,7 +119,7 @@ def crearNota(username):
     cursor = mydb.cursor()
     titulo = input("Titulo: ")
     texto = input("Cuerpo: ")
-    tiempo = datetime.today()
+    tiempo = datetime.timestamp(datetime.now())
     
     crear_nota = """INSERT INTO python.notas 
                     (titulo, creada, cuerpo, autor) 
@@ -136,26 +137,27 @@ def listarNotas(username):
     for (id,titulo, texto) in cursor:
         print("ID: " + str(id) + "   " + "Título: "+ str(titulo)+ ".")
         print("Cuerpo: "+ str(texto))
+    input("Presione cualquier tecla para salir: ")
     # Mostrar por pantalla las notas del usuario, ordenadas por fecha de creación decreciente
 
 def filtrarNotas(username):
     cursor = mydb.cursor()
     os.system("cls")
     pedir_fechas()
-    f1 = input("Fecha Inicial: ")
-    f2 = input("Fecha Final: ")
-    f1 =  datetime. strptime(f1, '%d/%m/%y')
-    f2 =  datetime. strptime(f2, '%d/%m/%y')
+    f1 = input("Fecha Inicial: ") 
+    f2 = input("Fecha Final: ") 
+    f1 =  datetime.timestamp(datetime.strptime(f1, '%d/%m/%Y'))
+    f2 =  datetime.timestamp(datetime.strptime(f2, '%d/%m/%Y'))
     consulta = """SELECT id, titulo, cuerpo
                     From python.notas
-                    WHERE autor = %s AND creada BETWEEN %s AND %S
+                    WHERE autor = %s AND creada BETWEEN %s AND %s
                     ORDER BY creada DESC"""
     cursor.execute(consulta, (username, f1, f2))
     for (id,titulo, texto) in cursor:
         print("ID: " + str(id) + "   " + "Título: "+ str(titulo)+ ".")
         print("Cuerpo: "+ str(texto))
     # Mostrar por pantalla las notas del usuario creadas entre dos fechas pedidas por pantalla
-    pass
+    input("Presione cualquier tecla para salir: ")
 
 def borrarNota(username):
     os.system("cls")
