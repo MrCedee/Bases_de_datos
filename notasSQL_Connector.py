@@ -44,9 +44,10 @@ def initDB():
 
 
 def muestraMenu():
+    os.system("cls")
     print('------- MENU -------')
     print('  1. Crear usuario')
-    print('  2. Login')
+    print('  2. LoginS')
     print('  3. Salir')
     print('--------------------')
 
