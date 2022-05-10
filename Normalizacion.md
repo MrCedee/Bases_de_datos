@@ -43,6 +43,6 @@ Estas formas son en cascada o lo que es lo mismo, si se cumple la 10 es que se c
 
 Es un caso mas restrictivo de la tercera forma normal de Codd.
 
-Para toda dependencia funcional el implicante es clave o superclave.
+Para toda dependencia funcional el implicante es clave o superclave. No es válido que sea un subconjunto de una superclave.
 
 Con esta forma normal es suficiente para evitar redundancias y soluciona en su mayoría las anomalías (todas las descritas en el ejemplo), aunque no es infalible en este sentido.
