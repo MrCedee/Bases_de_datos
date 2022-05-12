@@ -3,15 +3,16 @@ import os
 from datetime import datetime
 import time
 from mysql.connector.constants import ClientFlag
+import os
 
 os.system("cls")
 config = {    
     "user":"Use1",
     "password":"HolaBuenasTardes",
     "client_flags":[ClientFlag.SSL],
-    "ssl_ca":"Certificados/ca.perm",
-    "ssl_cert":"Certificados/client-cert.perm",
-    "ssl_key":"Certificados/client-key.perm"}
+    "ssl_ca":'Certificados/ca.perm',
+    "ssl_cert":'Certificados/client-cert.perm',
+    "ssl_key":'Certificados/client-key.perm'}
 mydb = mysql.connector.connect(**config)
 
 
