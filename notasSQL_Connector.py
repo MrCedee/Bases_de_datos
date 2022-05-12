@@ -6,13 +6,14 @@ from mysql.connector.constants import ClientFlag
 import os
 
 os.system("cls")
-config = {    
+config = { 
+    "host": "localhost",  
     "user":"Use1",
     "password":"HolaBuenasTardes",
     "client_flags":[ClientFlag.SSL],
-    "ssl_ca":'Certificados/ca.perm',
-    "ssl_cert":'Certificados/client-cert.perm',
-    "ssl_key":'Certificados/client-key.perm'}
+    "ssl_ca":'Certificados/ca.pem',
+    "ssl_cert":'Certificados/client-cert.pem',
+    "ssl_key":'Certificados/client-key.pem'}
 mydb = mysql.connector.connect(**config)
 
 
@@ -21,14 +22,14 @@ def initDB():
     cursor.execute('CREATE SCHEMA IF NOT EXISTS python')
     cursor.execute('USE python')
     tabla_user = """
-    CREATE TABLE IF NOT EXISTS  usuarios (
+    CREATE TABLE IF NOT EXISTS  python.usuarios (
         username VARCHAR(50) UNIQUE NOT NULL,
         password VARCHAR(50),
         PRIMARY KEY (username)
     );
     """
     tabla_notas = """
-    CREATE  TABLE IF NOT EXISTS notas (
+    CREATE  TABLE IF NOT EXISTS python.notas (
         id INT AUTO_INCREMENT,
         titulo VARCHAR(250) NOT NULL,
         creada BIGINT NOT NULL,
@@ -37,7 +38,7 @@ def initDB():
         PRIMARY KEY (id),
         CONSTRAINT
             FOREIGN KEY (autor)
-            REFERENCES usuarios (username)
+            REFERENCES python.usuarios (username)
             ON DELETE CASCADE
             ON UPDATE CASCADE
     );
