@@ -1,5 +1,3 @@
-from sqlite3 import Timestamp
-from MySQLdb import TimestampFromTicks
 from sqlalchemy import BigInteger, create_engine
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Integer, String
@@ -13,7 +11,14 @@ import time
 
 os.system("cls")
 engine = create_engine(
-    "mysql+pymysql://root:@127.0.0.1:3306/alchemy"
+    "mysql+pymysql://Use1:HolaBuenasTardes@127.0.0.1:3306/alchemy",
+    connect_args={
+        "ssl": {
+            "ssl_ca":"Certificados/ca.perm",
+            "ssl_cert":"Certificados/client-cert.perm",
+            "ssl_key":"Certificados/client-key.perm"
+        }
+    }
 )
 
 Base = declarative_base()

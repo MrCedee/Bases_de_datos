@@ -1,15 +1,18 @@
-from MySQLdb import TimestampFromTicks
 import mysql.connector
 import os
 from datetime import datetime
 import time
+from mysql.connector.constants import ClientFlag
 
 os.system("cls")
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd=""
-)
+config = {    
+    "user":"Use1",
+    "password":"HolaBuenasTardes",
+    "client_flags":[ClientFlag.SSL],
+    "ssl_ca":"Certificados/ca.perm",
+    "ssl_cert":"Certificados/client-cert.perm",
+    "ssl_key":"Certificados/client-key.perm"}
+mydb = mysql.connector.connect(**config)
 
 
 def initDB():
