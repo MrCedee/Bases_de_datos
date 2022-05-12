@@ -14,9 +14,9 @@ engine = create_engine(
     "mysql+pymysql://Use1:HolaBuenasTardes@127.0.0.1:3306/alchemy",
     connect_args={
         "ssl": {
-            "ssl_ca":"ca.perm",
-            "ssl_cert":"client-cert.perm",
-            "ssl_key":"client-key.perm"
+            "ssl_ca":"ca.pem",
+            "ssl_cert":"client-cert.pem",
+            "ssl_key":"client-key.pem"
         }
     }
 )
